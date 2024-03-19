@@ -155,7 +155,7 @@ Make sure to report any issues or bugs you encounter during testing.
 ## Notes
 Ensure you install the required libraries before running the application. You can install them using the command:
 ```bash
-pip install sympy
+pip install -r requirements.txt
 ```
 
 ### NOTE:

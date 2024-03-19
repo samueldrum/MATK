@@ -1,0 +1,40 @@
+MANUAL DE USO
+
+Lista é um conjunto de elementos, mais especificamente números no caso do MATK.
+
+funções (typing) no MATK, são funções que se digite no campo de texto, diferentemente das funções da Barra Menu (Stats)
+Se você quiser saber onde estão as funções typing, lê todo o manual a vai achá-lo na última linha.
+
+- Para inserir uma lista após uma função como mean, mode, med (median), etc..., deve ser feito da seguinte forma:
+
+>$> mean[1, 2, 3, 4, ..., n]
+
+- Para escrever uma expressão algébrica, a ser utilizada com diff (diferencial), integ (integral), solve, etc..., deve seguir este padrão:
+
+>$> solve 2*x - 4 
+
+Nunca utilize desta forma:
+
+>$> solve 2x - 4    // É necessário colocar o * entre a constante e a incógnita
+
+
+- Para utilizar funções mais básicas como sqrt, as funções trigonométricas, etc..., deve seguir este padrão:
+
+>$> sqrt n     // onde n é o número que você deseja calcular
+
+E nunca desta forma:
+
+>$> sqrt(n)
+
+
+- No menu (stats)
+
+  Neste menu, basta selecionar a função desejada e o sistema solicitará que você selecione um arquivo (MATK suporta apenas .csv e .xlsx(excel) no momento).
+
+  Algumas funções necessitam, além do arquivo selecionado, que você indique qual coluna deseja calcular, como nos submenus do 'Descri stats'.
+
+
+E lembre-se que as funções que tem "pre" na frente do nome, são funções que estão em versão beta,
+Não estão funcionando muito bem. 
+
+Para ver as funções (typing) que são pre, vai no Menu "Main" e clica no functions e você vai poder ver as funções alpha e as funções beta(pre)

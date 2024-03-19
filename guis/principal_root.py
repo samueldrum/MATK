@@ -6,9 +6,7 @@
    and sympy. Check the sympy documentation at https://docs.sympy.org/latest/index.html
    And also numpy at https://numpy.org/doc/stable/"""
 
-
-
-
+_version_= "1.20rc"
 
 import statistics, numpy, os
 from statistics import *
@@ -25,7 +23,7 @@ from tkinter import (Label,
                     scrolledtext
 )
 
-from functions.variables import big_number, _version_, __all__
+
 import tkinter as tk
 import sympy as sp
 from sympy import (
@@ -50,10 +48,9 @@ class My_GUI():
         self.entry = Entry(self.janela, font=12 ,width=65, highlightthickness=0.50, highlightbackground="white", bg="#1f1d1c", fg="white")
         self.entry.pack(pady=15)
 
-        label = Label(self.janela, text=">$>", bg="#1f1d1c", fg="green", font=5).place(x=12, y=14)
 
-        self.scrolled_text = scrolledtext.ScrolledText(self.janela, width=200, height=30, fg="white", bg="#1f1d1c", state="disabled")
-        self.scrolled_text.pack(padx=10, pady=10)
+        self.scrolled_text = scrolledtext.ScrolledText(self.janela, width=200, height=220, fg="white", bg="#1f1d1c", state="disabled")
+        self.scrolled_text.pack(padx=10, pady=40)
         self.barra_menu = tk.Menu(janela)
         
 
@@ -75,21 +72,26 @@ class My_GUI():
         self.statistics = tk.Menu(self.barra_menu, tearoff=0)
         self.statistics.add_command(label="Describe", command=self.describe)
         self.statistics.add_command(label="Info", command=self.infos)
+        self.statistics.add_command(label="COLUMNS", command=self.show_dtypes_columns)
 
         #Submeno of View amostrate
         self.submenu_amos = tk.Menu(self.statistics, tearoff=0)
         self.statistics.add_cascade(label="Sample", menu=self.submenu_amos)
         self.submenu_amos.add_command(label="Head", command=self.head)
         self.submenu_amos.add_command(label="Tail", command=self.tail)
+        self.submenu_amos.add_command(label="All", command=self.all_)
         #create a submenu (Descritive) for menu
         self.submenu_descrit = tk.Menu(self.statistics, tearoff=0)
         self.statistics.add_cascade(label="Descri Stats", menu=self.submenu_descrit)
+        self.submenu_descrit.add_command(label="Sum", command=self.sum_)
+        self.submenu_descrit.add_command(label="Max", command=self.max_)
+        self.submenu_descrit.add_command(label="Min", command=self.min_)
         self.submenu_descrit.add_command(label="Mean", command=self.mean_)
         self.submenu_descrit.add_command(label="Median", command=self.median_)
         self.submenu_descrit.add_command(label="Mode", command=self.mode_)
         self.submenu_descrit.add_command(label="Variance", command=self.variance_)
         self.submenu_descrit.add_command(label="Standard Deviation", command=self.stdv_)
-        self.submenu_descrit.add_command(label="Outliers", command=self.outliers)
+        self.submenu_descrit.add_command(label="Outliers (pre)", command=self.outliers)
 
 
         
@@ -100,11 +102,11 @@ class My_GUI():
         self.submenu_clean.add_command(label="Clear All", command=self.clear)
 
         #-------------------------------------------------------------------------------#
-        self.main.add_command(label="Save", command=self.caminho)
         self.main.add_command(label="version", command=version)
+        self.main.add_command(label="Manual", command=self.show_manual)
         self.main.add_command(label="About", command=self.about)
-        #self.menu_exemplo.add_command(label="Ver atalhos", command=all_shortcuts)
-        self.main.add_command(label="Quit", command=quit)
+        self.main.add_command(label="Shortcuts", command=all_shortcuts)
+        self.main.add_command(label="Exit", command=self.janela.destroy)
 
         # Add the menu to the main menu
         self.barra_menu.add_cascade(label="Main", menu=self.main)
@@ -117,14 +119,13 @@ class My_GUI():
         scrollbar = Scrollbar(janela, orient=VERTICAL)
         scrollbar.pack(side="right", fill="y")
 
-        self.entry.bind("<Control-c>", self.copiar_texto)
-        self.entry.bind("<Control-v>", self.colar_texto)
-        self.entry.bind("<Control-x>", self.cortar_texto)
+        self.janela.bind("<Control-c>", self.copiar_texto)
+        self.janela.bind("<Control-v>", self.colar_texto)
+        self.janela.bind("<Control-x>", self.cortar_texto)
         self.entry.bind("<Control-e>", lambda event: self.clear_entry())
-        self.entry.bind("<Control-l>", lambda event: self.clear_label())
-        self.entry.bind("<Control-o>", lambda event: self.clear())
-        self.entry.bind("<Control-q>", lambda event: quit())
-        self.entry.bind("<Control-s>", lambda event: self.caminho())
+        self.janela.bind("<Control-o>", lambda event: self.clear())
+        self.janela.bind("<Control-q>", lambda event: quit())
+        self.janela.bind("<Control-s>", lambda event: self.caminho())
         self.entry.bind("<Return>", lambda event: self.pesquisar())
 
 
@@ -150,7 +151,7 @@ class My_GUI():
                 
                 """Using the math module to calculate the factorial of the number."""
                 res = math.factorial(int(ent))
-                self.salvar_calculos(res)
+                (res)
                 self.scrolled_text.insert(tk.END, f">>> {res}\n")
             #-------------End of factorial-----------------------#
     
@@ -204,7 +205,7 @@ class My_GUI():
                         
                         result = trig_func(num)
                         self.scrolled_text.insert(tk.END, f">>> {result}\n")
-                        self.salvar_calculos(result)
+                        (result)
                         break
                     except ValueError as e:
                         self.scrolled_text.insert(tk.END,f"Erro: {e}\n")
@@ -235,11 +236,12 @@ class My_GUI():
                     entry_sym = sympify(entry)                         # Create the variable 'x'
                     resol = solve(entry_sym, x)                        # And solve it
                     self.scrolled_text.insert(tk.END, f">>> {resol}\n")
-                    self.salvar_calculos(resol)
+                    (resol)
             
 
                 except Exception as e:
-                    with open("main_pck\exemple.txt", 'r') as exemplo:
+                    rel_path = os.path.relpath("functions/exemple.txt")
+                    with open(rel_path, 'r') as exemplo:
                         exemple = [equacao.strip() for equacao in exemplo.readlines()]
                         rand = choice(exemple)
                     self.scrolled_text.insert(tk.END, f">>> {rand}\n")
@@ -253,10 +255,11 @@ class My_GUI():
                     entry_sym = sympify(entry)                         # Create the variable 'x'
                     resol = solveset(entry_sym, x) 
                     self.scrolled_text.insert(tk.END, f">>> {resol}\n")                    # And solve it
-                    self.salvar_calculos(resol)
+                    (resol)
            
                 except Exception as e:
-                    with open("main_pck\exemple.txt", 'r') as exemplo:
+                    rel_path = os.path.relpath("functions/exemple.txt")
+                    with open(rel_path, 'r') as exemplo:
                         exemple = [equacao.strip() for equacao in exemplo.readlines()]
                         rand = choice(exemple)
                     self.scrolled_text.insert(tk.END, f">>> {rand}\n")
@@ -271,10 +274,11 @@ class My_GUI():
                     entry_sym = Derivative(entry, x)                         
                     resol = entry_sym.doit()                                 # And solve it
                     self.scrolled_text.insert(tk.END, f">>> {resol}\n")
-                    self.salvar_calculos(resol)
+                    (resol)
 
                 except Exception as e:
-                    with open("main_pck\exemple.txt", 'r') as exemplo:
+                    rel_path = os.path.relpath("functions/exemple.txt")
+                    with open(rel_path, 'r') as exemplo:
                         exemple = [equacao.strip() for equacao in exemplo.readlines()]
                         rand = choice(exemple)
                     self.scrolled_text.insert(tk.END, f">>> {res}\n")
@@ -287,24 +291,25 @@ class My_GUI():
                     entry_sym = sympify(entry)                  
                     resol = sp.integrate(entry_sym)                      # And solve it
                     self.scrolled_text.insert(tk.END, f">>> {resol}\n")
-                    self.salvar_calculos(resol)
+                    (resol)
 
                 except Exception as e:
-                    with open("main_pck\exemple.txt", 'r') as exemplo:
+                    rel_path = os.path.relpath("functions/exemple.txt")
+                    with open(rel_path, 'r') as exemplo:
                         exemple = [equacao.strip() for equacao in exemplo.readlines()]
                         rand = choice(exemple)
                     self.scrolled_text.insert(tk.END, f">>> {rand}\n")
 
             elif self.entry_txt.startswith("mean"):
-                self.mean()
+                self.descriptive_function(mean, "mean")
             elif self.entry_txt.startswith("med"):
-                self.median()
+                self.descriptive_function(median, "med")
             elif self.entry_txt.startswith("mode"):
-                self.mode()
+                self.descriptive_function(mode, "mode")
             elif self.entry_txt.startswith("stdv"):
-                self.stdv()
+                self.descriptive_function(stdev, "stdv")
             elif self.entry_txt.startswith("var"):
-                self.variance()
+                self.descriptive_function(variance, "var")
             elif self.entry_txt.startswith("outliers"):
                 self.detect_outliers()
             elif self.entry_txt.startswith("percentile"):
@@ -328,10 +333,11 @@ class My_GUI():
                     entry_sym = sympify(entry)                         
                     resol = sp.diff(entry_sym, x)        # e o resolve
                     self.scrolled_text.insert(tk.END, f">>> {resol}\n")
-                    self.salvar_calculos(resol)
+                    (resol)
 
                 except Exception as e:
-                    with open("main_pck\exemple.txt", 'r') as exemplo:
+                    rel_path = os.path.relpath("functions/exemple.txt")
+                    with open(rel_path, 'r') as exemplo:
                         exemple = [equacao.strip() for equacao in exemplo.readlines()]
                         rand = choice(exemple)
                     self.scrolled_text.insert(tk.END, f">>> {rand}\n")
@@ -346,16 +352,20 @@ class My_GUI():
                     entry = self.entry_txt.replace("factor","")
                     resol = factor(entry)
                     self.scrolled_text.insert(tk.END, f">>> {resol}\n")
-                    self.salvar_calculos(resol)
+                    (resol)
                 except Exception as e:
-                    with open("main_pck\exemple.txt", 'r') as exemplo:
+                    rel_path = os.path.relpath("functions/exemple.txt")
+                    with open(rel_path, 'r') as exemplo:
                         exemple = [equacao.strip() for equacao in exemplo.readlines()]
                         rand = choice(exemple)
                     self.scrolled_text.insert(tk.END, f">>> {rand}\n")
                     
 
-            elif self.entry_txt.startswith("complex"): 
-                self.complex_number()                                                           
+            elif self.entry_txt.startswith("complex "): 
+                self.complex_number()    
+
+            elif self.entry_txt.startswith("help "):
+                self.help_()                                                       
 
             self.calculo_simples()   
         except Exception as e:
@@ -385,7 +395,7 @@ class My_GUI():
                 if 'j' in entry:
                     result = cmath.sqrt(complex(entry.replace('j', '')))
                     self.scrolled_text.insert(tk.END, str(result).replace('j', 'i'))
-                    self.salvar_calculos(result)
+                    (result)
                 else:
                     # Tentar converter a entrada para um número
                     num = Fraction(entry)
@@ -404,7 +414,7 @@ class My_GUI():
                             result = math.sqrt(num)
                     
                     self.scrolled_text.insert(tk.END, f">>> {result}\n")
-                    self.salvar_calculos(result)
+                    (result)
                     
         except ValueError:
             self.scrolled_text.insert(tk.END, "#Error: Invalid input\n")
@@ -421,7 +431,7 @@ class My_GUI():
                 in_number = int(entry)
                 result = in_number**(1/3)
                 self.scrolled_text.insert(tk.END,f">>> {result}\n")
-                self.salvar_calculos(result)
+                (result)
         except ValueError:
             self.scrolled_text.insert(tk.END,"#Error: Invalid Input format\n" )
         self.scrolled_text.configure(state="disabled")
@@ -434,7 +444,6 @@ class My_GUI():
             resultado = sympify(self.entry_txt)
 
             self.scrolled_text.insert(tk.END, f">>> {resultado}\n")
-            self.salvar_calculos(resultado)
         except Exception as e:
             print(e)
         self.scrolled_text.configure(state="disabled")
@@ -448,17 +457,18 @@ class My_GUI():
            >>> complex 3i + 4 * 4
            >>> complex (1i + 3) * (3 + 9i)"""
         try:
-            if self.entry_txt.startswith("complex"):
-                entry = self.entry_txt.replace("complex","")
+            if self.entry_txt.startswith("complex "):
+                entry = self.entry_txt.replace("complex ","")
                 if "i" in entry:
                     entry = entry.replace("i", "j")
                     result = eval(entry)
                     resultstr = str(result).replace("j", "i")
 
-                    self.scrolled_text.insert(tk.END, text=resultstr)
-                    self.salvar_calculos(resultstr)
-        except:
-            pass
+                    self.scrolled_text.insert(tk.END, f">>> {resultstr}\n\n")
+                else:
+                    self.scrolled_text.insert(tk.END, ">>> That's not an complex number\n\n")
+        except e:
+            self.scrolled_text.insert(tk.END, ">>> Can't read this number\n\n")
         self.scrolled_text.configure(state="disabled")
 
                
@@ -518,56 +528,24 @@ class My_GUI():
 
 
 
-    "Save the calculations to MATK_calculations.txt file on your computer"
-    def salvar_calculos(self, resultado):
-        self.scrolled_text.configure(state="normal")
-
-        try:
-            if self.diretorio_salvamento is None:
-                # Se o diretório de salvamento não foi escolhido, peça ao usuário para escolher um
-                self.diretorio_salvamento = self.caminho()
-
-                if not self.diretorio_salvamento:
-                    # Se o usuário cancelou a escolha do diretório, retorne sem salvar
-                    return
-
-            import os
-            from datetime import datetime
-            data = datetime.now()
-            formato_data_hora = data.strftime("%d/%m/%Y %H:%M:%S")
-
-            caminho_arquivo = os.path.join(self.diretorio_salvamento, "MATK_calculations.txt")
-
-            if not os.path.exists(caminho_arquivo):
-                with open(caminho_arquivo, "w") as arquivo:
-                    arquivo.write("MATK History\n\n\n")
-
-            with open(caminho_arquivo, "a") as arquivo:
-                arquivo.write(f"°: {self.entry_txt} = {str(resultado)} ---- Date:: ---- {formato_data_hora}\n")
-        except Exception as e:
-            print(f"Error when saving calculations: {e}")
-        
-        self.scrolled_text.configure(state="disabled")
-
-
-
-    from tkinter import filedialog
     
-    #Open the file explorer window to select the path
-    def caminho(self):
-        if not self.diretorio_salvamento:
-            # If the directory has not been chosen yet, prompt the user to choose it
-            self.diretorio_salvamento = filedialog.askdirectory(title="Where do you want to save it?")
-        return self.diretorio_salvamento
-
     def all_func(self):
+        import sys
+        from io import StringIO
+        self.clear()
         self.scrolled_text.configure(state="normal")
-        from time import sleep
-        lista = [i for i in __all__]
-        self.scrolled_text.insert(tk.END, f"{lista}\n\n{len(lista)} functions\n")
-        self.entry.clipboard_append(lista)
+
+        rell_path = os.path.relpath("functions/typing_functions.txt")
+
+        with open(rell_path, 'r') as text:
+            buffer = StringIO()
+            sys.stdout = buffer
+            content = text.read()
+            sys.stdout = sys.__stdout__
+            
+        self.scrolled_text.insert(tk.END, f"{content}\n\n{len(content.split(','))} functions\n")
+        self.entry.clipboard_append(content)
         messagebox.showinfo("Information", "This list was automatically copied, you can paste it wherever you want")
-        sleep(2)
         self.scrolled_text.configure(state="disabled")
 
     
@@ -582,60 +560,20 @@ class My_GUI():
        >>> stdv[10,445,33]"""
        
        
-
-    def mean(self):
+    # A function for descriptive functions, to type in the Entry text
+    def descriptive_function(self, function, start_name):
         self.scrolled_text.configure(state="normal")
         try:
-            if self.entry_txt.startswith("mean"):
-                entry = self.entry_txt[len("mean"):].strip()  # Remove  "mean" e spaces
-                numbers = [float(num) for num in entry.strip('[]').split(',')]  # convert the numbers in float
-                resultado = sum(numbers) / len(numbers)
-                self.scrolled_text.insert(tk.END,f">>> {resultado}\n")
-                self.salvar_calculos(resultado)
-        except ValueError:
-            self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
-        self.scrolled_text.configure(state="disabled")
-
-
-    def median(self):
-        self.scrolled_text.configure(state="normal")
-        try:
-            if self.entry_txt.startswith("med"):
-                entry = self.entry_txt[len("med"):].strip()
+            if self.entry_txt.startswith(start_name):
+                entry = self.entry_txt[len(start_name):].strip()
                 numbers = [float(num) for num in entry.strip('[]').split(',')]
-                resultado = statistics.median(numbers)
+                resultado = function(numbers)
                 self.scrolled_text.insert(tk.END,f">>> {resultado}\n")
-                self.salvar_calculos(resultado)
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
         self.scrolled_text.configure(state="disabled")
 
 
-    def mode(self):
-        self.scrolled_text.configure(state="normal")
-        try:
-            if self.entry_txt.startswith("mode"):
-                entry = self.entry_txt[len("mode"):].strip()
-                numbers = [float(num) for num in entry.strip('[]').split(',')]
-                resultado = statistics.mode(numbers)
-                self.scrolled_text.insert(tk.END,f">>> {resultado}\n")
-                self.salvar_calculos(resultado)
-        except ValueError:
-            self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
-        self.scrolled_text.configure(state="disabled")
-    
-    def stdv(self):
-        self.scrolled_text.configure(state="normal")
-        try:
-            if self.entry_txt.startswith("stdv"):
-                entry = self.entry_txt[len("stdv"):].strip()
-                numbers = [float(num) for num in entry.strip('[]').split(',')]
-                resultado = statistics.stdev(numbers)
-                self.scrolled_text.insert(tk.END,f">>> {resultado}\n")
-                self.salvar_calculos(resultado)
-        except ValueError:
-            self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
-        self.scrolled_text.configure(state="disabled")
 
     def variance(self):
         self.scrolled_text.configure(state="normal")
@@ -645,7 +583,6 @@ class My_GUI():
                 numbers = [float(num) for num in entry.strip('[]').split(',')]
                 resultado = statistics.variance(numbers)
                 self.scrolled_text.insert(tk.END,f">>> {resultado}\n")
-                self.salvar_calculos(resultado)
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
         self.scrolled_text.configure(state="disabled")
@@ -671,7 +608,6 @@ class My_GUI():
 
                 else:
                     self.scrolled_text.insert(tk.END,f">>> {outliers}\n")
-                    self.salvar_calculos(outliers)
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
         self.scrolled_text.configure(state="disabled")
@@ -727,7 +663,6 @@ class My_GUI():
                 percentile_100 = numpy.percentile(numbers, 100)
                 resultado = f">>> percentile 25%: {percentile_25}\npercentile 50%: {percentile_50}\npercentile 75%: {percentile_75}\npercentile 100%: {percentile_100}\n"
                 self.scrolled_text.insert(tk.END,resultado)
-                self.salvar_calculos(resultado)
                
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
@@ -756,7 +691,6 @@ class My_GUI():
                 percentile = numpy.percentile(numbers_discart, numbers[-1])
                 resultado = f">>> percentile {numbers[-1]}% : {percentile}\n"
                 self.scrolled_text.insert(tk.END,resultado)
-                self.salvar_calculos(resultado)
             
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
@@ -764,7 +698,7 @@ class My_GUI():
 
 
 
-
+    # Calculating the mean absolute deviation (MAD)
     def mad(self):
         self.scrolled_text.configure(state="normal")
         try:
@@ -774,7 +708,7 @@ class My_GUI():
                 mean_value = sum(numbers) / len(numbers)
                 mad_resultado = sum(abs(num - mean_value) for num in numbers) / len(numbers)
                 self.scrolled_text.insert(tk.END,f">>> {mad_resultado}\n")
-                self.salvar_calculos(mad_resultado)
+                (mad_resultado)
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
         self.scrolled_text.configure(state="disabled")
@@ -799,7 +733,7 @@ class My_GUI():
 
             # Exiba os coeficientes da regressão linear na label
             self.scrolled_text.insert(tk.END,f">>> {text}\n")
-            self.salvar_calculos(text)
+            (text)
 
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira uma lista válida de números\n")
@@ -820,7 +754,7 @@ class My_GUI():
                 result = math.comb(numbers[0], numbers[1])
 
                 self.scrolled_text.insert(tk.END,f">>> {result}\n")
-                self.salvar_calculos(result)
+                (result)
         except ValueError:
             self.scrolled_text.insert(tk.END,">>> Erro: Insira dois números inteiros para combinação\n")
         self.scrolled_text.configure(state="disabled")
@@ -839,7 +773,7 @@ class My_GUI():
                 result = math.perm(numbers[0], numbers[1])
 
                 self.scrolled_text.insert(tk.END,f">>> {result}\n")
-                self.salvar_calculos(result)
+                (result)
         except ValueError:
             self.scrolled_text.insert(tk.END, ">>> Erro: Put 2 integers values for permute\n")
         self.scrolled_text.configure(state="disabled")
@@ -942,25 +876,39 @@ class My_GUI():
         self.scrolled_text.configure(state="disabled")
 
     
+    def all_(self):
+        self.scrolled_text.configure(state="normal")
+        import pandas as pd
+        from tkinter import filedialog
+        filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
+
+        if filename:
+            try:
+                if filename.endswith(".csv"):
+                    df = pd.read_csv(filename)
+
+                elif filename.endswith(".xlsx"):
+                    df = pd.read_excel(filename)
+
+                self.scrolled_text.insert(tk.END, f"HEAD\n\n{df}\n\n")
+            except Exception as e:
+                self.scrolled_text.insert(tk.END, e)
+        else:
+            self.scrolled_text.insert(tk.END, "This file did not exist\n")
+        self.scrolled_text.configure(state="disabled")
+
+    
     def outliers(self):
         self.scrolled_text.configure(state="normal")
         import pandas as pd
         from tkinter import filedialog, simpledialog
-        dado = simpledialog.askstring("Inserir dado", "Digita nome da coluna:")
-        coluna = dado
         filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
-       
+        
+        self.show_columns(filename)
 
-        if filename:
-            if filename.endswith(".csv"):
-                try:
-                    df = pd.read_csv(filename)
-                    if coluna in df.columns:
-                        self.scrolled_text.insert(tk.END, f"OUTLIERS\n\n{self.detect_outlier(df, dado)}")
-                    else:
-                        self.scrolled_text.insert(tk.END, "Você deve colocar a coluna para voce calcular o outlier\n\n")
-                except:
-                    self.scrolled_text.insert(tk.END, "Esse arquivo não é tipo csv\n\n")
+        dado = simpledialog.askstring("Inserir dado", "Digita nome da coluna:")
+
+        self.calculate_descriptive("OUTLIERS", filename, self.detect_outlier, dado)
         self.scrolled_text.configure(state="disabled")
 
 
@@ -970,34 +918,16 @@ class My_GUI():
     #==--------------------------Descriptive statistics---------------------------------==#
                     
     def mean_(self):
-        import pandas as pd
         #Calculate the mean of a number column of a dataframe
         self.scrolled_text.configure(state="normal")
-        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
         filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
 
-        if filename:
-            if filename.endswith(".csv"):
-                df = pd.read_csv(filename)
-                coluna = df[dado].tolist()
+        self.show_columns(filename)
 
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"MEAN\n\n>>> {mean(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, ">>> Não existe essa coluna\n\n")
-            
-            elif filename.endswith(".xlsx"):
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
-                df = pd.read_excel(filename)
-                coluna = df[dado].tolist()
-
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"MEAN\n\n>>> {mean(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, ">>> Não existe essa coluna\n\n")
-        else:
-            messagebox.showerror("Erro", "Arquivo deve ser .csv ou .xlsx")
+        self.calculate_descriptive("MEAN", filename, mean, dado)
         self.scrolled_text.configure(state="disabled")
 
 
@@ -1005,127 +935,96 @@ class My_GUI():
     def median_(self):
         #Calculate the median of a number column of a dataframe
         self.scrolled_text.configure(state="normal")
-        import pandas as pd
-        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
         filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
 
-        if filename:
-            if filename.endswith(".csv"):
-                df = pd.read_csv(filename)
-                coluna = df[dado].tolist()
+        self.show_columns(filename)
 
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"MEDIAN\n\n>>> {median(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, ">>> Não existe essa coluna\n\n")
-            
-            elif filename.endswith(".xlsx"):
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
-                df = pd.read_excel(filename)
-                coluna = df[dado].tolist()
-
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"MEDIAN\n\n{median(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, ">>> Não existe essa coluna\n\n")
-        else:
-            messagebox.showerror("Erro", "Arquivo deve ser .csv ou .xlsx")
+        self.calculate_descriptive("MEDIAN", filename, median, dado)
         self.scrolled_text.configure(state="disabled")
+        
 
     def mode_(self):
         #Calculate the mode of a number column of a dataframe
         self.scrolled_text.configure(state="normal")
-        import pandas as pd
-        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
+        
         filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
 
-        if filename:
-            if filename.endswith(".csv"):
-                df = pd.read_csv(filename)
-                coluna = df[dado].tolist()
+        self.show_columns(filename)
 
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"MODE\n\n>>> {mode(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, ">>> Não existe essa coluna\n\n")
-            
-            elif filename.endswith(".xlsx"):
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
-                df = pd.read_excel(filename)
-                coluna = df[dado].tolist()
-
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"MEAN\n\n>>> {mean(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, ">>> Não existe essa coluna\n\n")
-        else:
-            messagebox.showerror("Erro", "Arquivo deve ser .csv ou .xlsx")
+        self.calculate_descriptive("MODE", filename, mode, dado)
         self.scrolled_text.configure(state="disabled")
 
     def variance_(self):
         self.scrolled_text.configure(state="normal")
         #Calculate the variance of a number column of a dataframe
-        import pandas as pd
-        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
         filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
 
-        if filename:
-            if filename.endswith(".csv"):
-                df = pd.read_csv(filename)
-                coluna = df[dado].tolist()
+        self.show_columns(filename)
 
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"VARIANCE\n\n>>> {variance(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, "Não existe essa coluna\n\n")
-            
-            elif filename.endswith(".xlsx"):
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
-                df = pd.read_excel(filename)
-                coluna = df[dado].tolist()
-
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"VARIANCE\n\n>>> {variance(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, "Não existe essa coluna\n\n")
-        else:
-            messagebox.showerror("Erro", "Arquivo deve ser .csv ou .xlsx")
+        self.calculate_descriptive("VARIANCE", filename, variance, dado)
         self.scrolled_text.configure(state="disabled")
 
     def stdv_(self):
         self.scrolled_text.configure(state="normal")
         #Calculate the stdv of a number column of a dataframe
-        import pandas as pd
-        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
         filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
 
-        if filename:
-            if filename.endswith(".csv"):
-                df = pd.read_csv(filename)
-                coluna = df[dado].tolist()
+        self.show_columns(filename)
 
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"STANDARD DEVIATION\n\n>>> {stdev(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, "Não existe essa coluna\n\n")
-            
-            elif filename.endswith(".xlsx"):
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
 
-                df = pd.read_excel(filename)
-                coluna = df[dado].tolist()
-
-                if coluna:
-                    self.scrolled_text.insert(tk.END, f"STANDARD DEVIATION\n\n>>> {stdev(coluna)}\n\n")
-                else:
-                    self.scrolled_text.insert(tk.END, "Não existe essa coluna\n\n")
-        else:
-            messagebox.showerror("Erro", "Arquivo deve ser .csv ou .xlsx")
-        
+        self.calculate_descriptive("STANDARD DEVIATION", filename, stdev, dado)
         self.scrolled_text.configure(state="disabled")
+
+    def sum_(self):
+        self.scrolled_text.configure(state="normal")
+        #Calculate the stdv of a number column of a dataframe
+
+        filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
+
+        self.show_columns(filename)
+
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
+
+        self.calculate_descriptive("SUM", filename, sum, dado)
+        self.scrolled_text.configure(state="disabled")
+
+    def min_(self):
+        self.scrolled_text.configure(state="normal")
+        #Calculate the stdv of a number column of a dataframe
+
+        filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
+
+        self.show_columns(filename)
+
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
+
+        self.calculate_descriptive("MIN", filename, min, dado)
+        self.scrolled_text.configure(state="disabled")
+
+    def max_(self):
+        self.scrolled_text.configure(state="normal")
+        #Calculate the stdv of a number column of a dataframe
+
+        filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
+
+        self.show_columns(filename)
+
+        dado = simpledialog.askstring("Nome da coluna", "Insira o nome da coluna:")
+
+        self.calculate_descriptive("MAX", filename, max, dado)
+        self.scrolled_text.configure(state="disabled")
+        
 
 
     # A function for the "about Menu button 
@@ -1136,7 +1035,6 @@ class My_GUI():
         import sys, os
         from io import StringIO
 
-        relative_path = os.path.relpath("/home/sam/Documentos/pYTHON/Trabalho/Matk/LICENSE")
         rel_path = os.path.relpath("LICENSE")
         with open(rel_path, "r") as text:
             buffer = StringIO()
@@ -1148,17 +1046,152 @@ class My_GUI():
         self.scrolled_text.insert(tk.END, f"{content}\n\n")
 
         self.scrolled_text.configure(state="disabled")
+    
+
+    def financial_root():
+        pass
+
+
+    # A function to show columns of a DataFrame
+    def show_columns(self, filename):
+        import pandas as pd
+
+        if filename:
+            if filename.endswith(".csv"):
+                df = pd.read_csv(filename)
+
+
+
+                self.scrolled_text.insert(tk.END, "COLUMNS\n\n")
+
+                for i in df.columns:
+                    self.scrolled_text.insert(tk.END, f"  - {i}\n\n")
+
+            if filename.endswith(".xlsx"):
+                df = pd.read_excel(filename)
+
+                column = df.columns
+
+                self.scrolled_text.insert(tk.END, "COLUMNS\n\n")
+
+                for i in column:
+                    self.scrolled_text.insert(tk.END, f"  - {i}\n\n")
+        else:
+            messagebox.showerror("Error", "Nome de Arquivo invalido")
+
+
+    
+    def show_dtypes_columns(self): 
+        self.scrolled_text.configure(state="normal")
+        import pandas as pd
+
+        filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
+
+        if filename:
+            try:
+                if filename.endswith(".csv"):
+                    df = pd.read_csv(filename)
+
+                    columns = df.columns
+                    dtypes = df.dtypes
+
+                    self.scrolled_text.insert(tk.END, "COLUMNS\n\n")
+
+                    for column, dtype in zip(columns, dtypes):
+                        self.scrolled_text.insert(tk.END, f"  {column} - {dtype}\n\n")
+
+            except Exception as e:
+                print(e)
+            
+        else:
+            self.scrolled_text.insert(tk.END, "Arquivo não encontrado")
+
+        self.scrolled_text.configure(state="disabled")
+
+
+
+    # A function for descriptive statistic
+    def calculate_descriptive(self, Name, filename, function, data):
+        
+        import pandas as pd
+
+        if filename:
+            try:
+                if filename.endswith(".csv"):
+                    df = pd.read_csv(filename)
+                    coluna = df[data].tolist()
+
+                    if coluna:
+                        self.scrolled_text.insert(tk.END, f"{Name} - {data} column\n\n>>> {function(coluna)}\n\n")
+                    else:
+                        self.scrolled_text.insert(tk.END, "Não existe essa coluna\n\n")
+                
+                elif filename.endswith(".xlsx"):
+
+                    df = pd.read_excel(filename)
+                    coluna = df[data].tolist()
+
+                    if coluna:
+                        self.scrolled_text.insert(tk.END, f"{Name} - {data} column\n\n>>> {function(coluna)}\n\n")
+                    else:
+                        self.scrolled_text.insert(tk.END, "Não existe essa coluna\n\n")
+            except:
+                messagebox.showerror("Error", "A coluna deve ser de numeros\n\n")
+        else:
+            messagebox.showerror("Erro", "Arquivo deve ser .csv ou .xlsx")
+        self.scrolled_text.configure(state="disabled")
+
+    
+
+    def show_manual(self):
+        self.clear()
+        self.scrolled_text.configure(state="normal")
+        import sys
+        from io import StringIO
+        rel_path = os.path.relpath("functions/exemple2.txt")
+        with open(rel_path, "r") as text:
+            buffer = StringIO()
+            sys.stdout = buffer
+            content = text.read()
+            sys.stdout = sys.__stdout__
+           
+            self.scrolled_text.insert(tk.END, content)
+        self.scrolled_text.configure(state="disabled")
+
+    def help_(self):
+        self.scrolled_text.configure(state="normal")
+        try:
+            import json
+            rell_path = os.path.relpath("functions/help.json")
+            with open(rell_path, "r") as file:
+                data = json.load(file)
+            entry = self.entry.get()
+
+            if entry.startswith("help "):
+                entry = entry.replace("help ", "")
+                if entry in data:
+                    self.scrolled_text.insert(tk.END, f"TF:: {data[entry]}\n\n")
+                else:
+                    messagebox.showerror("Error", f"Invalid Typing function ''{entry}'' ")
+            else:
+                messagebox.showerror("Error", "Invalid Function")
+
+        except:
+            messagebox.showerror("Error", "Invalid Function")
+
+        
+    
 
 
 
 # Function to view shortcut commands
 def all_shortcuts():
 
-    text = """                   Ctrl-c: Copy text from the entry\n
+    text = """  Ctrl-c: Copy text from the entry\n
                 Ctrl-v: Paste text from the entry anywhere\n
                 Ctrl-x: Cut the text and paste it anywhere\n
                 Ctrl-e: Clear the text field\n
-                Ctrl-l: Clear the result field\n
+                Ctrl-s: Save the history into a path\n
                 Ctrl-o: Clean All (Clear everything)\n
                 Ctrl-q: Quit (Exit)\n"""
     messagebox.showinfo("Shortcut", text)
@@ -1167,15 +1200,22 @@ def all_shortcuts():
 
 # See the version Of MATK 
 def version():
-    messagebox.showinfo("Version", f"Version: {_version_}\n01/02/2024")
+    messagebox.showinfo("Version", f"Version: {_version_}")
 
 
-# This function is for when the number becomes too large, it will return ("It's too large")
-def Numero_Grande(res):
-    res = float(res)
-    if res >=big_number:
-        return "Its so big"
-    else:
-        return "909"
-#================================And of LN(Large Number)================================#
+
+
+
+"""RUN THE APP"""
+
+class Run(My_GUI):
+    def main():
+        jan = tk.Tk()
+        app = My_GUI(jan)
+        jan.title("MATK")
+        jan.configure(bg="#1f1d1c")
+        jan.mainloop()
+
+if __name__ == "__main__":
+    Run.main()
 

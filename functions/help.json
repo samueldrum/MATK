@@ -1,0 +1,44 @@
+{
+    "fat": "calculates the factorial of a number. Example: fat 5 returns 120",
+    "sqrt": "calculates the square root of a number. Example: sqrt 16 returns 4.0",
+    "complex": "creates a complex number from its real and imaginary parts. Example: complex 2+3i returns 2+3i",
+    "cbrt": "calculates the cube root of a number. Example: cbrt 8 returns 2.0",
+    "sol": "solves an equation. Example: sol x**2 - 4 returns [-2, 2]",
+    "set": "solve an equation in a set. Example: set x**2 - 4 returns {-2, 2}",
+    "factor": "factors a number into its prime factors. Example: factor x**2 - 4 returns (x - 2)*(x + 2)",
+    "ln": "calculates the natural logarithm of a number. Example: ln 10 returns 2.302585092994046",
+    "log2": "calculates the base 2 logarithm of a number. Example: log2 8 returns 3.0",
+    "log10": "calculates the base 10 logarithm of a number. Example: log10 100 returns 2.0",
+    "cos": "calculates the cosine of an angle in radians. Example: cos 0 returns 1.0",
+    "sin": "calculates the sine of an angle in radians. Example: sin 0 returns 0.0",
+    "tan": "calculates the tangent of an angle in radians. Example: tan 0 returns 0.0",
+    "acos": "calculates the arc cosine of a value. Example: acos 1 returns 0.0",
+    "atan": "calculates the arc tangent of a value. Example: atan 1 returns 0.7853981633974483",
+    "asin": "calculates the arc sine of a value. Example: asin 0 returns 0.0",
+    "cosh": "calculates the hyperbolic cosine of a value. Example: cosh 0 returns 1.0",
+    "acosh": "calculates the hyperbolic arc cosine of a value. Example: acosh 1 returns 0.0",
+    "asinh": "calculates the hyperbolic arc sine of a value. Example: asinh 0 returns 0.0",
+    "atanh": "calculates the hyperbolic arc tangent of a value. Example: atanh 0 returns 0.0",
+    "deriv": "calculates the derivative of an expression. Example: deriv x**2 returns 2*x",
+    "integ": "calculates the integral of an expression. Example: integ x**2 returns x**3/3",
+    "diff": "calculates the differential of an expression. Example: diff x**4 returns 4*x**3",
+    "mean": "calculates the mean of a list of numbers. Example: mean [1, 2, 3, 4, 5] returns 3.0",
+    "med": "calculates the median of a list of numbers. Example: med [1, 2, 3, 4, 5] returns 3.0",
+    "mode": "calculates the mode of a list of numbers. Example: mode [1, 2, 2, 3, 3, 3, 4] returns 3",
+    "stdv": "calculates the standard deviation of a list of numbers. Example: stdv [1, 2, 3, 4, 5] returns 1.4142135623730951",
+    "var": "calculates the variance of a list of numbers. Example: var [1, 2, 3, 4, 5] returns 2.0",
+    "outliers": "identifies the outliers in a list of numbers. Example: outliers [1, 2, 3, 4, 100] returns [100.0]",
+    "percentile": "calculates the percentile of a list of numbers. Example: percentile [1, 2, 3, 4, 5] returns percentile 25%: 2.0, percentile 50%: 3.0, percentile 75%: 4.0, percentile 100%: 5.0",
+    "percentper": "calculates the percentage of a number based on the last number. Example: percentper [1, 2, 3, 4, 5, 100] returns percentile 100.0%: 5.0",
+    "mad": "calculates the mean absolute deviation of a list of numbers. Example: mad [1, 2, 3, 4, 5] returns 1.2",
+    "regression": "performs linear regression on a list of points. Example: regression [1,5] returns 4.0x + 1.0",
+    "comb": "calculates the number of combinations of k elements in a set of n elements. Example: comb [5,2] returns 10",
+    "perm": "calculates the number of permutations of k elements in a set of n elements. Example: perm [5 2] returns 20",
+    "help": "That's a function to know about a typing function in MATK"
+}
+
+
+
+
+
+

@@ -6,7 +6,6 @@ MATK.egg-info/SOURCES.txt
 MATK.egg-info/dependency_links.txt
 MATK.egg-info/top_level.txt
 functions/__init__.py
-functions/functions.py
 functions/variables.py
 guis/__init__.py
 guis/main.py
