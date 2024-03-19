@@ -467,7 +467,7 @@ class My_GUI():
                     self.scrolled_text.insert(tk.END, f">>> {resultstr}\n\n")
                 else:
                     self.scrolled_text.insert(tk.END, ">>> That's not an complex number\n\n")
-        except e:
+        except:
             self.scrolled_text.insert(tk.END, ">>> Can't read this number\n\n")
         self.scrolled_text.configure(state="disabled")
 
