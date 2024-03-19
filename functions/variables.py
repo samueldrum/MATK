@@ -1,6 +1,0 @@
-
-#All functions in MATK 
-__all__ = [ 'fat', 'sqrt','complex (pre)','cbrt', 'sol', 'set', 'factor', 'ln', 'log2', 'log10', 'cos', 'sin', 'tan', 'acos', 'atan', 'asin','cosh','acosh','asinh','atanh','deriv', 'integ', 'diff',
-           "mean","med","mode","stdv","var","outliers","percentile",'pecentper',"mad","regression","comb","permute"]
-
-

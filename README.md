@@ -1,6 +1,6 @@
 # MATK
 
-**MATK** is a Mathematics application developed in Python with a graphical interface using Tkinter. It offers functionalities based on the SymPy library for symbolic calculations. For detailed information on using SymPy's features, please refer to
+**MATK** is a Mathematics statistic and finance (pre) application developed in Python with a graphical interface using Tkinter. It offers functionalities based on the SymPy library for symbolic calculations. For detailed information on using SymPy's features, please refer to
 
 [![SymPy Version](https://img.shields.io/badge/SymPy-1.12-green)](https://www.sympy.org/)
 [![NumPy Version](https://img.shields.io/badge/NumPy-1.26-blue)](https://numpy.org/doc/stable/)
