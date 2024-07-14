@@ -161,4 +161,4 @@ pip install -r requirements.txt
 ### NOTE:
 There is one thing, each time you open the program, it will ask where to save the history of the calculations you are doing in MATK.
 
-*This project was developed by Samuel Bidjory Toussaint.*
+*This project was developed by Samuel Bidjory.*
